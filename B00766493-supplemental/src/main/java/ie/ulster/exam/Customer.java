@@ -2,24 +2,23 @@ package ie.ulster.exam;
 
 public class Customer {
 
-    private String room;
+    private String Destination;
     private int rm_capacity;
     private String rm_feature;
-    private String alcohol;
+	private String Accessible;
 
     Customer() {
     }
+    Customer(String Destination, int capacity, String Feature, String Accessible) {
 
-    Customer(String room, int capacity, String Feature, String Alcahol) {
-
-        this.alcohol = Alcahol;
+        this.Accessible = Accessible;
         this.rm_feature = Feature;
         this.rm_capacity = capacity;
-        this.room = room;
+        this.Destination = Destination;
     }
 
-    public String getRoom() {
-        return room;
+    public String getDestination() {
+        return Destination;
     }
 
     public int getCapacity() {
@@ -29,11 +28,11 @@ public class Customer {
         return rm_feature;
 
     }
-    public String getAlcohol() {
-        return alcohol;
+    public String getAccessible() {
+        return Accessible;
     }
-    public void SetRoom(String room) {
-        this.room = room;
+    public void SetDestination(String Destination) {
+        this.Destination = Destination;
     }
     public void SetCapacity(int capacity) {
         this.rm_capacity = capacity;
@@ -41,7 +40,7 @@ public class Customer {
     public void SetFeature(String Feature) {
         this.rm_feature = Feature;
 	}
-    public void setAlcohol(String Alcahol) {
-        this.alcohol = Alcahol;
+    public void setAccessible(String Accessible) {
+        this.Accessible = Accessible;
     }
 }
