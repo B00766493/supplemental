@@ -68,7 +68,7 @@ myGrid.setItems(customers);
 myGrid.addColumn(Customer::getDestination).setCaption("Destination ");
 myGrid.addColumn(Customer::getCapacity).setCaption("Capacity");
 myGrid.addColumn(Customer::getFeature).setCaption("Feature");
-myGrid.addColumn(Customer::isAccessible).setCaption("Accessible");
+myGrid.addColumn(Customer::Accessible).setCaption("Accessible");
 myGrid.setSelectionMode(SelectionMode.MULTI);
 myGrid.setSizeFull();
 
