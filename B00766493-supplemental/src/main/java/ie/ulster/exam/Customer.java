@@ -4,7 +4,7 @@ public class Customer {
 
     private String Destination;
     private int capacity;
-    private String features;
+    private String Features;
 	private String Accessible;
 
     Customer() {
@@ -12,7 +12,7 @@ public class Customer {
     Customer(String Destination, int capacity, String Features, String Accessible) {
 
         this.Accessible = Accessible;
-        this.features = Features;
+        this.Features = Features;
         this.capacity = capacity;
         this.Destination = Destination;
     }
@@ -25,7 +25,7 @@ public class Customer {
         return capacity;
     }
     public String getFeatures() {
-        return features;
+        return Features;
 
     }
     public String getAccessible() {
@@ -38,7 +38,7 @@ public class Customer {
         this.capacity = capacity;
     }
     public void SetFeatures(String Features) {
-        this.features = Features;
+        this.Features = Features;
 	}
     public void setAccessible(String Accessible) {
         this.Accessible = Accessible;

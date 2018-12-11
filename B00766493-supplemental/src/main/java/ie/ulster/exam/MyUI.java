@@ -128,7 +128,7 @@ protected void init(VaadinRequest vaadinRequest) {
             //we want, we might not want all the fields, note how I skip the ID)
                 customers.add(new Customer(rs.getString("Destination"), 
                                             rs.getInt("Capacity"), 
-                                            rs.getString("Feature"),
+                                            rs.getString("Features"),
                                             rs.getString("Accessible")));
 
             }// Add a label to the web app and name of
@@ -139,7 +139,7 @@ protected void init(VaadinRequest vaadinRequest) {
             // Configure the order and the caption of the grid
             myGrid.addColumn(Customer::getDestination).setCaption("Destination");
             myGrid.addColumn(Customer::getCapacity).setCaption("Capacity");
-            myGrid.addColumn(Customer::getFeature).setCaption("Feature");
+            myGrid.addColumn(Customer::getFeatures).setCaption("Features");
             myGrid.addColumn(Customer::getAccessible).setCaption("Accessible");
             
 
