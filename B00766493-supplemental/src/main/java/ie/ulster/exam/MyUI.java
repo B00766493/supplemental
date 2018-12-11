@@ -1,36 +1,45 @@
 package ie.ulster.exam;
 
 import java.util.*;
-import javax.servlet.annotation.WebServlet;
+import java.util.stream.Collectors;
 import java.sql.*;
+import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
+import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.ui.*;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.shared.ui.*;
 
 /**
- * This UI is the application entry point. A UI may either represent a browser window 
- * (or tab) or some part of an HTML page where a Vaadin application is embedded.
- * <p>
- * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
- * overridden to add component to the user interface and initialize non-component functionality.
- */
-@Theme("mytheme")
-public class MyUI extends UI {
 
+ * This UI is the application entry point. A UI may either represent a browser
+
+ * window (or tab) or some part of an HTML page where a Vaadin application is
+
+ * embedded.
+
+ * <p>
+
+ * The UI is initialized using {@link #init(VaadinRequest)}. This method is
+
+ * intended to be overridden to add component to the user interface and
+
+ * initialize non-component functionality.
+
+ */
+
+@Theme("mytheme")
+
+public class MyUI extends UI {
     @Override
-    protected void init(VaadinRequest vaadinRequest) {
-        String connectionString
-        
-        = "jdbc:sqlserver://b00766493-second.database.windows.net:1433;"+
+protected void init(VaadinRequest vaadinRequest) {
+         Connection connection = null;
+         
+        // Connect to the database in Azure by JDBC
+        String connectionString =  "jdbc:sqlserver://b00766493-second.database.windows.net:1433;"+
         "database=B00766493-second-exam;"+
         "user=B00766493@b00766493-second;"+
         "password={Eoin2018*};"+
@@ -39,144 +48,184 @@ public class MyUI extends UI {
         "hostNameInCertificate=*.database.windows.net;"+
         "loginTimeout=30;";
 
-        Connection connection = null;
+        // User Interface design, horizontal and vertical overall
+        final HorizontalLayout horizontalLayout = new HorizontalLayout();
         final VerticalLayout layout = new VerticalLayout();
-        
-        try 
-{
-	// Connect with JDBC driver to a database
-	connection = DriverManager.getConnection(connectionString);
-	ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM customerTable;");
-// Convert the resultset that comes back into a List - we need a Java class to represent the data (Customer.java in this case)
-List<Customer> customers = new ArrayList<Customer>();
-// While there are more records in the resultset
-while(rs.next())
-{   
-	// Add a new Customer instantiated with the fields from the record (that we want, we might not want all the fields, note how I skip the id)
-	customers.add(new Customer(rs.getString("Destination"), 
-				rs.getString("Capacity"), 
-				rs.getBoolean("Accessible"), 
-				rs.getString("Feature")));
-}// Add a label to the web app with the message and name of the database we connected to 
-	//layout.addComponent(new Label("Connected to database: " + connection.getCatalog()));
-// Execute a query against the database and return rows (if any) to the ResultSet
-// Add my component, grid is templated with Customer
-Grid<Customer> myGrid = new Grid<>();
-// Set the items (List)
-myGrid.setItems(customers);
-// Configure the order and the caption of the grid
-myGrid.addColumn(Customer::getDestination).setCaption("Destination ");
-myGrid.addColumn(Customer::getCapacity).setCaption("Capacity");
-myGrid.addColumn(Customer::getFeature).setCaption("Feature");
-myGrid.addColumn(Customer::Accessible).setCaption("Accessible");
-myGrid.setSelectionMode(SelectionMode.MULTI);
-myGrid.setSizeFull();
+        // Grid layout
+        Grid<Customer> myGrid = new Grid<>();
+        //myGrid.setWidth("1200px");
+        myGrid.setSizeFull();
+        // set the grid to the full width of the page
 
-// Add the grid to the list
-layout.addComponent(myGrid);
 
-} 
-catch (Exception e) 
-{
-	// This will show an error message if something went wrong
-	layout.addComponent(new Label(e.getMessage()));
-}
-setContent(layout);
+        // The logo in HTML
+        Label logo = new Label(
+        "<H1>Marty Party Planners</H1> <p/> <h3>Please enter the details below and click Book</h3>");
+        logo.setContentMode(com.vaadin.shared.ui.ContentMode.HTML);
 
-HorizontalLayout v = new HorizontalLayout(); //sub layout 1
-Label logo = new Label
-("<H1>Fun Bus Bookings</H1> <p/> <h3>Please enter the details below and click Book</h3><br>", ContentMode.HTML);
-
-//VerticalLayout v2 = new VerticalLayout();//sub layout 2
-        final TextField name = new TextField();
-        name.setCaption("Name of group:");
-
+        // A label under the grid with student number
         Label label = new Label ("B00766493");
-
-        final TextField value = new TextField();
-        value.setCaption("How many people are attending (min 20, max 150):");
-        value.setPlaceholder(" ");
         
-        //dropdown selections
-        ComboBox<String> children = new ComboBox<String>("Accessibility needs?");
-        children.setItems("Yes","No"); // the options availible 
-        children.setPlaceholder("No option selected"); //same as TextField placeholder
+        // a textfield  
+        final TextField name = new TextField();
+        name.setCaption("Name of group");
 
-        Slider s = new Slider("How many people are attending (min 20, max 150):", 20, 150);
-        s.setValue(75.0);
-        //s.setWidth(s.getMax()+"px");
-        s.setWidth("500px");// setslider width to 500 PIXELS
-        s.addValueChangeListener(e ->{
-            double x = s.getValue();
+        // Slider
+        Slider slider = new Slider(0, 200);
+        slider.setCaption("How many people attending");
+        slider.setOrientation(SliderOrientation.HORIZONTAL);
+        slider.setWidth("500px");// setslider width to 500 PIXELS
+        slider.setValue(100.0);// Set slider value to midpoint
+       
+        /*
+        slider.setWidth(slider.getMax()+"px");
+        slider.addValueChangeListener(e ->{
+            double x = slider.getValue();
             value.setValue(""+x);
         });
 
         value.addValueChangeListener(e ->{
             
             double x = Double.parseDouble(value.getValue());
-            if (x>s.getMax()){
-               s.setMax(x);
-               s.setWidth(x+"px");
+            if (x>slider.getMax()){
+                slider.setMax(x);
+                slider.setWidth(x+"px");
             }
-            else if (x<s.getMin()){
-                x = s.getMin();
+            else if (x<slider.getMin()){
+                x = slider.getMin();
             }
-            s.setValue(x);
+            slider.setValue(x);
         });
 
+*/
+        // Book button
         Button button = new Button("Book");
-        button.addClickListener(e -> {
-            boolean bookable = false;
-            // declare bookable as boolean variable
-            String partyName = "";
-            //declare partyName as string variable
-            String result = "";
-            //public String getValue() {
-             //   return partyName;
-            //}
-            //public void setValue(String partyName) {
-            //    this.partyName = partyName;
-            //}
-            // check party name is entered
-            //if(partyName.getValue().length()==0)
-            //{
-              //  bookable = false;
-                //result.setValue("<strong> Please enter party name</strong>");
-                //return;
-            //}
-        //if(Customer.Destination.length ==0){
-        //return ("<strong> Please select at least one room.<strong>",
-        //ContentMode.HTML);}
-            //if (value.length() ==0 ){ return"Please enter party name";}
-            //if (children.length()==0){return "Please 
-            //confirm if children attending your party";}
-            //if ((Customer.Accessible == false)&&(children.length()!=0)){
-            //    return "You cannot select any rooms serving Accessible if 
-            //    children are attending";}
-            //if(s> sum.Capacity){return "You have selected rooms with a max 
-            //capacity of "+ sum.Capacity+ "which is not enough to hold "+ s;}; 
-            //else {return "Success! The party is booked now";};
-            //if(bookable == true){
-              //  result.setValue
-                //("<h3> Success! The party is booked now<h3>");
-                //return;
-            //}
-            layout.addComponent(new Label("Your party " + name.getValue() 
-                    + ", is now booked"));
-                    Label notyet = new Label
-("<h3>Your party is not booked yet</h3><br>", ContentMode.HTML);
+
+        // label
+        final Label vertvalue = new Label();
+
+        slider.addValueChangeListener(event -> {
+            int value = event.getValue().intValue();
+            vertvalue.setValue(String.valueOf(value));
 
         });
-        
-       // layout.addComponents(notyet);
-        v.addComponents(name, s, children); //build sub layout
-  //      v2.addComponents(button, button2); //build sub layout
-        layout.addComponents(logo,v,button, label); // build master layout
+
+
+        // Drop down selections
+        ComboBox<String> comboBox = new ComboBox<>("Accessible");
+        comboBox.setItems("No", "Yes");
+
+        try {
+            // Connect with JDBC driver to a database
+            connection = DriverManager.getConnection(connectionString);
+            ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM CustomerTable;");
+            // Convert the resultset that comes back into a list- we need a 
+            // Javaclass to represent the data (Customer.java in this case)
+            List<Customer> customers = new ArrayList<Customer>();
+
+            // While there are more records in the resultset
+            while (rs.next()) {
+            // Add a new customer instantiated with the fields from the record(that
+            //we want, we might not want all the fields, note how I skip the ID)
+                customers.add(new Customer(rs.getString("Destination"), 
+                                            rs.getInt("Capacity"), 
+                                            rs.getString("Feature"),
+                                            rs.getString("Accessible")));
+
+            }// Add a label to the web app and name of
+            //the database we connected to 
+
+            // Set the items (List)
+            myGrid.setItems(customers);
+            // Configure the order and the caption of the grid
+            myGrid.addColumn(Customer::getDestination).setCaption("Destination");
+            myGrid.addColumn(Customer::getCapacity).setCaption("Capacity");
+            myGrid.addColumn(Customer::getFeature).setCaption("Feature");
+            myGrid.addColumn(Customer::getAccessible).setCaption("Accessible");
+            
+
+        } catch (Exception e) {
+
+            // This will show an error notyet if something went wrong
+        layout.addComponent(new Label(e.getMessage()));
+
+        }
+        // create a label, initially set it to show not booked
+        Label notyet = new Label();
+        notyet.setValue("Your party is not booked yet");
+        notyet.setContentMode(ContentMode.HTML);
+
+
+        // Set the grid to be multi selectable
+        myGrid.setSelectionMode(SelectionMode.MULTI);
+        MultiSelect<Customer> select = myGrid.asMultiSelect();
+
+        myGrid.addSelectionListener(event -> {
+        // to returns current value of objects
+        Notification.show(select.getValue().stream().map(Customer::getDestination)
+        .collect(Collectors.joining(",")) + " were selected");
+        });
+
+        button.addClickListener(e -> {
+        // returns the current value of the objects, a sequential stream
+        // applying the given function of the elements
+        String aString = select.getValue().stream().map(Customer::getAccessible).collect(Collectors.joining(","));
+
+        int cap = select.getValue().stream().mapToInt(Customer::getCapacity).sum();
+
+        notyet.setValue(String.valueOf(cap));
+        // when all conditions have been met, the button can return "booked" etc
+         String match = "true";
+
+            // if one of the selections is incomplete, the reminders are shown
+            if (myGrid.getSelectedItems().size() == 0) {
+                notyet.setValue("<strong>Please select at least one Destination!</strong>");
+
+                // if name field is empty, the reminder to fill in this field will appear 
+            } else if (name.isEmpty()) {
+                notyet.setValue("<strong>Please enter party name.</strong>");
+
+                // if drop down selection has not been chosed, the reminder will appear
+            } else if (comboBox.isEmpty()) {
+                notyet.setValue("<strong>Please confirm if children attending your party</strong>");
+
+                // if drop down selection is yes, display the reminder
+            } else if ((comboBox.getValue() == "Yes") && (aString.equalsIgnoreCase(match))) {
+                notyet.setValue(
+                        "<strong>You cannot select any Destinations serving Accessible if children are attending.</strong>");
+
+                // if slider is has chosen capacity greater than chosen Destination, display       
+            } else if (slider.getValue().intValue() > cap) {
+                notyet.setValue("<strong>You have selected Destinations with a max capacity of " + cap
+                        + " which is not enough to hold </strong>" + slider.getValue().intValue());
+                
+                // else you are successful
+            } else {
+                notyet.setValue("<strong>Success! The party is booked now</strong>");
+            }
+        });
+
+        // Structure 
+        layout.addComponent(logo);
+        horizontalLayout.addComponents(name, slider, comboBox);
+        layout.addComponent(horizontalLayout);
+        // sub layout
+        layout.addComponent(button);
+        layout.addComponent(notyet);
+        layout.addComponent(myGrid);
+        layout.addComponent(label);
         setContent(layout);
+
     }
+
+
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+
     public static class MyUIServlet extends VaadinServlet {
+
     }
+
 }

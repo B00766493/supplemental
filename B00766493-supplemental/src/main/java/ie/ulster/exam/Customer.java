@@ -1,49 +1,47 @@
 package ie.ulster.exam;
-class Customer
-{
-    private String Destination;
-    private String Capacity;
-    private boolean Accessible;
-    private String Feature;
 
-    Customer(String Destination, String Capacity, boolean Accessible, String Feature)
-    {
-        this.Destination = Destination;
-        this.Capacity = Capacity;
-        this.Accessible = Accessible;
-        this.Feature = Feature;
+public class Customer {
+
+    private String room;
+    private int rm_capacity;
+    private String rm_feature;
+    private String alcohol;
+
+    Customer() {
     }
-	
-	public String getDestination() {
-		return Destination;
+
+    Customer(String room, int capacity, String Feature, String Alcahol) {
+
+        this.alcohol = Alcahol;
+        this.rm_feature = Feature;
+        this.rm_capacity = capacity;
+        this.room = room;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public int getCapacity() {
+        return rm_capacity;
+    }
+    public String getFeature() {
+        return rm_feature;
+
+    }
+    public String getAlcohol() {
+        return alcohol;
+    }
+    public void SetRoom(String room) {
+        this.room = room;
+    }
+    public void SetCapacity(int capacity) {
+        this.rm_capacity = capacity;
+    }
+    public void SetFeature(String Feature) {
+        this.rm_feature = Feature;
 	}
-	
-	public void setDestination(String Destination) {
-		this.Destination = Destination;
-	}
-	
-	public String getCapacity() {
-		return Capacity;
-	}
-	
-	public void setCapacity(String Capacity) {
-		this.Capacity = Capacity;
-	}
-	
-	public boolean isAccessible() {
-		return Accessible;
-	}
-	
-	public void setAccessible(boolean Accessible) {
-		this.Accessible = Accessible;
-	}
-	
-	public String getFeature() {
-		return Feature;
-	}
-	
-	public void setFeature(String Feature) {
-		this.Feature = Feature;
-	}
-	 
+    public void setAlcohol(String Alcahol) {
+        this.alcohol = Alcahol;
+    }
 }
