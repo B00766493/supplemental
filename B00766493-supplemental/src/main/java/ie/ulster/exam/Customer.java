@@ -4,15 +4,15 @@ public class Customer {
 
     private String Destination;
     private int capacity;
-    private String feature;
+    private String features;
 	private String Accessible;
 
     Customer() {
     }
-    Customer(String Destination, int capacity, String Feature, String Accessible) {
+    Customer(String Destination, int capacity, String Features, String Accessible) {
 
         this.Accessible = Accessible;
-        this.feature = Feature;
+        this.features = Features;
         this.capacity = capacity;
         this.Destination = Destination;
     }
@@ -24,8 +24,8 @@ public class Customer {
     public int getCapacity() {
         return capacity;
     }
-    public String getFeature() {
-        return feature;
+    public String getFeatures() {
+        return features;
 
     }
     public String getAccessible() {
@@ -37,8 +37,8 @@ public class Customer {
     public void SetCapacity(int capacity) {
         this.capacity = capacity;
     }
-    public void SetFeature(String Feature) {
-        this.feature = Feature;
+    public void SetFeatures(String Features) {
+        this.features = Features;
 	}
     public void setAccessible(String Accessible) {
         this.Accessible = Accessible;
