@@ -60,7 +60,7 @@ protected void init(VaadinRequest vaadinRequest) {
 
         // The logo in HTML
         Label logo = new Label(
-        "<H1>Marty Party Planners</H1> <p/> <h3>Please enter the details below and click Book</h3>");
+        "<H1>Fun Bus Bookings</H1> <p/> <h3>Please enter the details below and click Book</h3>");
         logo.setContentMode(com.vaadin.shared.ui.ContentMode.HTML);
 
         // A label under the grid with student number
@@ -71,11 +71,11 @@ protected void init(VaadinRequest vaadinRequest) {
         name.setCaption("Name of group");
 
         // Slider
-        Slider slider = new Slider(0, 200);
+        Slider slider = new Slider(20, 150);
         slider.setCaption("How many people attending");
         slider.setOrientation(SliderOrientation.HORIZONTAL);
         slider.setWidth("500px");// setslider width to 500 PIXELS
-        slider.setValue(100.0);// Set slider value to midpoint
+        slider.setValue(65.0);// Set slider value to midpoint
        
         /*
         slider.setWidth(slider.getMax()+"px");
@@ -109,7 +109,6 @@ protected void init(VaadinRequest vaadinRequest) {
             vertvalue.setValue(String.valueOf(value));
 
         });
-
 
         // Drop down selections
         ComboBox<String> comboBox = new ComboBox<>("Accessible");
@@ -152,7 +151,7 @@ protected void init(VaadinRequest vaadinRequest) {
         }
         // create a label, initially set it to show not booked
         Label notyet = new Label();
-        notyet.setValue("Your party is not booked yet");
+        notyet.setValue("Your group is not booked yet");
         notyet.setContentMode(ContentMode.HTML);
 
 
@@ -179,29 +178,29 @@ protected void init(VaadinRequest vaadinRequest) {
 
             // if one of the selections is incomplete, the reminders are shown
             if (myGrid.getSelectedItems().size() == 0) {
-                notyet.setValue("<strong>Please select at least one Destination!</strong>");
+                notyet.setValue("<strong>Please select at least one bus!</strong>");
 
                 // if name field is empty, the reminder to fill in this field will appear 
             } else if (name.isEmpty()) {
-                notyet.setValue("<strong>Please enter party name.</strong>");
+                notyet.setValue("<strong>Please enter group name.</strong>");
 
                 // if drop down selection has not been chosed, the reminder will appear
             } else if (comboBox.isEmpty()) {
-                notyet.setValue("<strong>Please confirm if children attending your party</strong>");
+                notyet.setValue("<strong>Please confirm if your group needs an accessible bus</strong>");
 
                 // if drop down selection is yes, display the reminder
             } else if ((comboBox.getValue() == "Yes") && (aString.equalsIgnoreCase(match))) {
                 notyet.setValue(
-                        "<strong>You cannot select any Destinations serving Accessible if children are attending.</strong>");
+                        "<strong>You cannot select a non-accessible bus.</strong>");
 
                 // if slider is has chosen capacity greater than chosen Destination, display       
             } else if (slider.getValue().intValue() > cap) {
-                notyet.setValue("<strong>You have selected Destinations with a max capacity of " + cap
+                notyet.setValue("<strong>You have selected buses with a max capacity of " + cap
                         + " which is not enough to hold </strong>" + slider.getValue().intValue());
                 
                 // else you are successful
             } else {
-                notyet.setValue("<strong>Success! The party is booked now</strong>");
+                notyet.setValue("<strong>Success! The group is booked now</strong>");
             }
         });
 
